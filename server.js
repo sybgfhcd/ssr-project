@@ -1,29 +1,27 @@
-const Vue = require('vue')
 const server = require('express')()
-const renderer = require('vue-server-renderer').createRenderer()
+
+// fs获取页面模板html文件
+const renderer = require('vue-server-renderer').createRenderer({
+    template: require('fs').readFileSync('./public/index.html', 'utf-8')
+})
+
+server.get('*', (req, res) => res.send('这是404接口返回的默认数据'))
 
 server.get('*', (req, res) => {
-    const app = new Vue({
-        data: {
-            url: req.url
-        },
-        template: `<div>访问的 URL 是： {{ url }}</div>`
-    })
+    const context = {
+        title: 'hello world'
+    }
 
-    res.setHeader('Content-Type','text/html;charset=UTF-8'); // 避免乱码
-    renderer.renderToString(app, (err, html) => {
+    renderer.renderToString('', context, (err, html) => {
         if (err) {
             res.status(500).end('Internal Server Error')
             return
         }
-        res.end(`
-      <!DOCTYPE html>
-      <html lang="en">
-        <head><title>Hello World</title></head>
-        <body>${html}</body>
-      </html>
-    `)
+        // 接口获取到的html数据
+        res.end(`${html}`)
     })
 })
+
+
 
 server.listen(8080)
