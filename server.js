@@ -13,7 +13,7 @@ server.get('*', (req, res) => {
         data: {
             url: req.url
         },
-        template: `<div>访问的 URL 是： {{ url }}</div>`
+        template: `<div style="color: #996;">访问的地址是：http://localhost:8080/</div>`
     })
     const context = {
         title: 'hello world'
